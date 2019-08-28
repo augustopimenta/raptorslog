@@ -20,6 +20,10 @@ type Order struct {
 	Location string `json:"location"`
 }
 
+const (
+	QueueHostEnv = "QUEUE_HOST"
+)
+
 var (
 	locations = []string{"AM", "MG", "RS"}
 	client    *redis.Client
@@ -40,20 +44,20 @@ func orderHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
+	queueHost := getEnv(QueueHostEnv, "localhost:6379")
+
 	client = redis.NewClient(&redis.Options{
-		Addr:     getEnv("QUEUE_HOST", "localhost:6379"),
+		Addr:     queueHost,
 		Password: "",
 		DB:       0,
 	})
 
-	pong, err := client.Ping().Result()
-
-	fmt.Println(pong, err)
+	fmt.Printf("order-service started! QUEUE_HOST=%s\n", queueHost)
 
 	r := mux.NewRouter()
 	r.HandleFunc("/order", orderHandler)
 
-	log.Fatal(http.ListenAndServe(":8000", r))
+	log.Fatal(http.ListenAndServe(":80", r))
 }
 
 func getEnv(name string, defaultValue string) string {
