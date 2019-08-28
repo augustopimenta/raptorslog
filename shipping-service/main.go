@@ -18,6 +18,9 @@ type Order struct {
 
 const (
 	QueueHostEnv = "QUEUE_HOST"
+	TruckAMHost  = "TRUCK_AM_HOST"
+	TruckMGHost  = "TRUCK_MG_HOST"
+	TruckRSHost  = "TRUCK_RS_HOST"
 )
 
 var (
@@ -55,9 +58,9 @@ func main() {
 func fillRoutes() {
 	deliveryRoutes = make(map[string]string)
 
-	deliveryRoutes["AM"] = getEnv("TRUCK_AM_HOST", "")
-	deliveryRoutes["MG"] = getEnv("TRUCK_MG_HOST", "")
-	deliveryRoutes["RS"] = getEnv("TRUCK_RS_HOST", "")
+	deliveryRoutes["AM"] = getEnv(TruckAMHost, "")
+	deliveryRoutes["MG"] = getEnv(TruckMGHost, "")
+	deliveryRoutes["RS"] = getEnv(TruckRSHost, "")
 }
 
 func getEnv(name string, defaultValue string) string {
