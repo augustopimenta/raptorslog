@@ -22,3 +22,13 @@ Projeto de microservices para estudo de service mesh e sidecars com Istio e Envo
 * Utilizar minikube na orquestração de microservices.
 
 ![Diagram](Diagram-RaptorsLog.png)
+
+# Versão na linguagem GO
+
+* Os microservices foram implementado na linguagem Go
+* Para a fila foi utilizado uma instancia de Redis
+* Como banco de dados final foi utilizada uma instancia de MongoDB
+
+A loja está implementada no microservice **order-service**
+A transportadora está implementada no microservice **shipping-service**
+Os entregadores então implementados no microservice **truck-service**
