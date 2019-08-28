@@ -1,6 +1,52 @@
 version: "3.1"
 
 services:
+  order-service:
+    build: ./order-service
+    depends_on:
+      - queue
+    ports:
+      - 8000:80
+    environment:
+      QUEUE_HOST: queue:6379
+
+  shipping-service:
+    build: ./shipping-service
+    depends_on:
+      - queue
+    environment:
+      QUEUE_HOST: queue:6379
+      TRUCK_AM_HOST: truc
+      TRUCK_MG_HOST: truck-mg-service
+      TRUCK_RS_HOST: truck-rs-service
+
+  truck-am-service:
+    build: ./truck-service
+    depends_on:
+      - database
+    environment:
+      DATABASE_CONNECTION: mongodb://admin:admin@database/?w=majority
+      DATABASE_NAME: raptorslog
+      DELIVERY_TIME: 1
+
+  truck-mg-service:
+    build: ./truck-service
+    depends_on:
+      - database
+    environment:
+      DATABASE_CONNECTION: mongodb://admin:admin@database/?w=majority
+      DATABASE_NAME: raptorslog
+      DELIVERY_TIME: 2
+      
+  truck-rs-service:
+    build: ./truck-service
+    depends_on:
+      - database
+    environment:
+      DATABASE_CONNECTION: mongodb://admin:admin@database/?w=majority
+      DATABASE_NAME: raptorslog
+      DELIVERY_TIME: 3    
+
   queue:
     image: redis
     ports:
