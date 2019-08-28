@@ -1,7 +1,10 @@
 package main
 
 import (
+	"bytes"
+	"encoding/json"
 	"fmt"
+	"net/http"
 	"os"
 
 	"github.com/go-redis/redis"
@@ -13,26 +16,48 @@ type Order struct {
 	Location string `json:"location"`
 }
 
+const (
+	QueueHostEnv = "QUEUE_HOST"
+)
+
 var (
-	client *redis.Client
+	client         *redis.Client
+	deliveryRoutes map[string]string
 )
 
 func main() {
 	client = redis.NewClient(&redis.Options{
-		Addr:     getEnv("QUEUE_HOST", "localhost:6379"),
+		Addr:     getEnv(QueueHostEnv, "localhost:6379"),
 		Password: "",
 		DB:       0,
 	})
 
-	pong, err := client.Ping().Result()
+	fillRoutes()
 
-	fmt.Println(pong, err)
+	fmt.Printf("shipping-service started! %v\n", deliveryRoutes)
 
 	for {
+		var order Order
 		result, _ := client.BLPop(0, "queue:orders").Result()
 
-		fmt.Println("Processing:", result[1])
+		json.Unmarshal([]byte(result[1]), &order)
+
+		if host, ok := deliveryRoutes[order.Location]; ok && host != "" {
+			fmt.Printf("Processing: %s, sending to host %s\n", result[1], host)
+
+			http.Post(fmt.Sprintf("http://%s/deliver", host), "application/json", bytes.NewBuffer([]byte(result[1])))
+		} else {
+			fmt.Printf("Processing %s, with error \n", result[1])
+		}
 	}
+}
+
+func fillRoutes() {
+	deliveryRoutes = make(map[string]string)
+
+	deliveryRoutes["AM"] = getEnv("TRUCK_AM_HOST", "")
+	deliveryRoutes["MG"] = getEnv("TRUCK_MG_HOST", "")
+	deliveryRoutes["RS"] = getEnv("TRUCK_RS_HOST", "")
 }
 
 func getEnv(name string, defaultValue string) string {
