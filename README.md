@@ -25,10 +25,14 @@ Projeto de microservices para estudo de service mesh e sidecars com Istio e Envo
 
 # Versão na linguagem GO
 
+## Tecnologias
+
 * Os microservices foram implementado na linguagem Go
 * Para a fila foi utilizado uma instancia de Redis
 * Como banco de dados final foi utilizada uma instancia de MongoDB
 
-A loja está implementada no microservice **order-service**
-A transportadora está implementada no microservice **shipping-service**
-Os entregadores então implementados no microservice **truck-service**
+## Organização
+
+* A loja está implementada no microservice **order-service**
+* A transportadora está implementada no microservice **shipping-service**
+* Os entregadores então implementados no microservice **truck-service**
