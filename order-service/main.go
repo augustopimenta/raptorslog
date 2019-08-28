@@ -44,15 +44,13 @@ func orderHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-	queueHost := getEnv(QueueHostEnv, "localhost:6379")
-
 	client = redis.NewClient(&redis.Options{
-		Addr:     queueHost,
+		Addr:     getEnv(QueueHostEnv, "localhost:6379"),
 		Password: "",
 		DB:       0,
 	})
 
-	fmt.Printf("order-service started! QUEUE_HOST=%s\n", queueHost)
+	fmt.Println("order-service started!")
 
 	r := mux.NewRouter()
 	r.HandleFunc("/order", orderHandler)
