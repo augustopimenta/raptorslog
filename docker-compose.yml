@@ -16,7 +16,7 @@ services:
       - queue
     environment:
       QUEUE_HOST: queue:6379
-      TRUCK_AM_HOST: truc
+      TRUCK_AM_HOST: truck-am-service
       TRUCK_MG_HOST: truck-mg-service
       TRUCK_RS_HOST: truck-rs-service
 
@@ -37,7 +37,7 @@ services:
       DATABASE_CONNECTION: mongodb://admin:admin@database/?w=majority
       DATABASE_NAME: raptorslog
       DELIVERY_TIME: 2
-      
+
   truck-rs-service:
     build: ./truck-service
     depends_on:
@@ -45,7 +45,7 @@ services:
     environment:
       DATABASE_CONNECTION: mongodb://admin:admin@database/?w=majority
       DATABASE_NAME: raptorslog
-      DELIVERY_TIME: 3    
+      DELIVERY_TIME: 3
 
   queue:
     image: redis
