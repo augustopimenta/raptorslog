@@ -23,15 +23,17 @@ type Request struct {
 }
 
 const (
-	DatabaseConnectionEnv = "DATABASE_CONNECTION"
-	DatabaseNameEnv       = "DATABASE_NAME"
-	DeliveryTimeEnv       = "DELIVERY_TIME"
+	DatabaseHostEnv = "DATABASE_HOST"
+	DatabaseUserEnv = "DATABASE_USERNAME"
+	DatabasePassEnv = "DATABASE_PASSWORD"
+	DatabaseNameEnv = "DATABASE_NAME"
+	DeliveryTimeEnv = "DELIVERY_TIME"
 )
 
 var client *mongo.Client
 
 func main() {
-	dbConnection := getEnv(DatabaseConnectionEnv, "mongodb://admin:admin@localhost/?w=majority")
+	dbConnection := getDatabaseConnection()
 
 	client, _ = mongo.Connect(context.TODO(), options.Client().ApplyURI(dbConnection))
 
@@ -59,6 +61,14 @@ func deliverHandler(w http.ResponseWriter, r *http.Request) {
 
 	w.WriteHeader(http.StatusOK)
 	w.Write([]byte("OK"))
+}
+
+func getDatabaseConnection() string {
+	host := getEnv(DatabaseHostEnv, "localhost")
+	user := getEnv(DatabaseUserEnv, "admin")
+	pass := getEnv(DatabasePassEnv, "admin")
+
+	return fmt.Sprintf("mongodb://%s:%s@%s/?w=majority", user, pass, host)
 }
 
 func getDatabaseName() string {
