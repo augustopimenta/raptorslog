@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: database-configs
+data:
+  dbName: raptorslog
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: database-secrets
+data:
+  dbUsername: YWRtaW4=
+  dbPassword: YWRtaW4=

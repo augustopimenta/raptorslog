@@ -1,0 +1,167 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: truck-am
+spec:
+  selector:
+    app: truck-am
+  clusterIP: None
+  ports:
+    - port: 80
+      name: web
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: truck-mg
+spec:
+  selector:
+    app: truck-mg
+  clusterIP: None
+  ports:
+    - port: 80
+      name: web
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: truck-rs
+spec:
+  selector:
+    app: truck-rs
+  clusterIP: None
+  ports:
+    - port: 80
+      name: web
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: truck-am
+  labels:
+    app: truck-am
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: truck-am
+  template:
+    metadata:
+      labels:
+        app: truck-am
+    spec:
+      containers:
+        - name: truck-am-service
+          image: augustopimenta/raptorslog-truck-service:v1.0
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80
+              name: web
+          env:
+            - name: DELIVERY_TIME
+              value: "1"
+            - name: DATABASE_HOST
+              value: database:27017
+            - name: DATABASE_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: database-configs
+                  key: dbName
+            - name: DATABASE_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: database-secrets
+                  key: dbUsername
+            - name: DATABASE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: database-secrets
+                  key: dbPassword
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: truck-mg
+  labels:
+    app: truck-mg
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: truck-mg
+  template:
+    metadata:
+      labels:
+        app: truck-mg
+    spec:
+      containers:
+        - name: truck-mg-service
+          image: augustopimenta/raptorslog-truck-service:v1.0
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80
+              name: web
+          env:
+            - name: DELIVERY_TIME
+              value: "2"
+            - name: DATABASE_HOST
+              value: database:27017
+            - name: DATABASE_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: database-configs
+                  key: dbName
+            - name: DATABASE_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: database-secrets
+                  key: dbUsername
+            - name: DATABASE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: database-secrets
+                  key: dbPassword
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: truck-rs
+  labels:
+    app: truck-rs
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: truck-rs
+  template:
+    metadata:
+      labels:
+        app: truck-rs
+    spec:
+      containers:
+        - name: truck-rs-service
+          image: augustopimenta/raptorslog-truck-service:v1.0
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80
+              name: web
+          env:
+            - name: DELIVERY_TIME
+              value: "3"
+            - name: DATABASE_HOST
+              value: database:27017
+            - name: DATABASE_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: database-configs
+                  key: dbName
+            - name: DATABASE_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: database-secrets
+                  key: dbUsername
+            - name: DATABASE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: database-secrets
+                  key: dbPassword

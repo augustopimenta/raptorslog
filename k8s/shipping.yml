@@ -1,0 +1,38 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: shipping
+spec:
+  selector:
+    app: shipping
+  clusterIP: None
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: shipping
+  labels:
+    app: shipping
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: shipping
+  template:
+    metadata:
+      labels:
+        app: shipping
+    spec:
+      containers:
+        - name: shipping-service
+          image: augustopimenta/raptorslog-shipping-service:v1.0
+          imagePullPolicy: Always
+          env:
+            - name: QUEUE_HOST
+              value: queue:6379
+            - name: TRUCK_AM_HOST
+              value: truck-am
+            - name: TRUCK_MG_HOST
+              value: truck-mg
+            - name: TRUCK_RS_HOST
+              value: truck-rs
