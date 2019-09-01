@@ -25,7 +25,9 @@ services:
     depends_on:
       - database
     environment:
-      DATABASE_CONNECTION: mongodb://admin:admin@database/?w=majority
+      DATABASE_HOST: database:27017
+      DATABASE_USERNAME: admin
+      DATABASE_PASSWORD: admin
       DATABASE_NAME: raptorslog
       DELIVERY_TIME: 1
 
@@ -34,7 +36,9 @@ services:
     depends_on:
       - database
     environment:
-      DATABASE_CONNECTION: mongodb://admin:admin@database/?w=majority
+      DATABASE_HOST: database:27017
+      DATABASE_USERNAME: admin
+      DATABASE_PASSWORD: admin
       DATABASE_NAME: raptorslog
       DELIVERY_TIME: 2
 
@@ -43,7 +47,9 @@ services:
     depends_on:
       - database
     environment:
-      DATABASE_CONNECTION: mongodb://admin:admin@database/?w=majority
+      DATABASE_HOST: database:27017
+      DATABASE_USERNAME: admin
+      DATABASE_PASSWORD: admin
       DATABASE_NAME: raptorslog
       DELIVERY_TIME: 3
 
