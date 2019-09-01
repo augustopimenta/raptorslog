@@ -1,0 +1,55 @@
+name: Publicando imagens no Docker Hub
+
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  order-service:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v1
+        name: Checkout do Projeto
+
+      - name: Buildando e Publicando
+        run: |
+          imageName=$GITHUB_REPOSITORY-order-service
+          imageTag=$(echo '${{ github.ref }}' | sed 's/refs\/tags\///')
+          docker build -t $imageName:$imageTag -t $imageName:latest ./order-service
+          echo ${{ secrets.DOCKERHUB_PASSWORD }} | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
+          docker push $imageName:$imageTag
+          docker push $imageName:latest
+
+  shipping-service:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v1
+        name: Checkout do Projeto
+
+      - name: Buildando e Publicando
+        run: |
+          imageName=$GITHUB_REPOSITORY-shipping-service
+          imageTag=$(echo '${{ github.ref }}' | sed 's/refs\/tags\///')
+          docker build -t $imageName:$imageTag -t $imageName:latest ./shipping-service
+          echo ${{ secrets.DOCKERHUB_PASSWORD }} | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
+          docker push $imageName:$imageTag
+          docker push $imageName:latest
+
+  truck-service:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v1
+        name: Checkout do Projeto
+
+      - name: Buildando e Publicando
+        run: |
+          imageName=$GITHUB_REPOSITORY-truck-service
+          imageTag=$(echo '${{ github.ref }}' | sed 's/refs\/tags\///')
+          docker build -t $imageName:$imageTag -t $imageName:latest ./truck-service
+          echo ${{ secrets.DOCKERHUB_PASSWORD }} | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
+          docker push $imageName:$imageTag
+          docker push $imageName:latest
