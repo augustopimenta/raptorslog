@@ -57,7 +57,7 @@ func deliverHandler(w http.ResponseWriter, r *http.Request) {
 
 	collection.InsertOne(context.TODO(), bson.M{"id": request.ID, "location": request.Location, "time": t})
 
-	fmt.Printf("Order %s to %s delivered after %d seconds\n", request.ID, request.Location, t)
+	fmt.Printf("[v2] Order %s to %s delivered after %d seconds\n", request.ID, request.Location, t)
 
 	w.WriteHeader(http.StatusOK)
 	w.Write([]byte("OK"))
