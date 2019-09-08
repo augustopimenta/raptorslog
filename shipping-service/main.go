@@ -17,10 +17,10 @@ type Order struct {
 }
 
 const (
-	QueueHostEnv = "QUEUE_HOST"
-	TruckAMHost  = "TRUCK_AM_HOST"
-	TruckMGHost  = "TRUCK_MG_HOST"
-	TruckRSHost  = "TRUCK_RS_HOST"
+	QueueHostEnv   = "QUEUE_HOST"
+	TruckAMHostEnv = "TRUCK_AM_HOST"
+	TruckMGHostEnv = "TRUCK_MG_HOST"
+	TruckRSHostEnv = "TRUCK_RS_HOST"
 )
 
 var (
@@ -37,7 +37,7 @@ func main() {
 
 	fillRoutes()
 
-	fmt.Printf("shipping-service started! %v\n", deliveryRoutes)
+	fmt.Println("shipping-service started!")
 
 	for {
 		var order Order
@@ -50,7 +50,7 @@ func main() {
 
 			http.Post(fmt.Sprintf("http://%s/deliver", host), "application/json", bytes.NewBuffer([]byte(result[1])))
 		} else {
-			fmt.Printf("Processing %s, with error \n", result[1])
+			fmt.Printf("Processing %s, with error\n", result[1])
 		}
 	}
 }
@@ -58,9 +58,9 @@ func main() {
 func fillRoutes() {
 	deliveryRoutes = make(map[string]string)
 
-	deliveryRoutes["AM"] = getEnv(TruckAMHost, "")
-	deliveryRoutes["MG"] = getEnv(TruckMGHost, "")
-	deliveryRoutes["RS"] = getEnv(TruckRSHost, "")
+	deliveryRoutes["AM"] = getEnv(TruckAMHostEnv, "")
+	deliveryRoutes["MG"] = getEnv(TruckMGHostEnv, "")
+	deliveryRoutes["RS"] = getEnv(TruckRSHostEnv, "")
 }
 
 func getEnv(name string, defaultValue string) string {

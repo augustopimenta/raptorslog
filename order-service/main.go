@@ -32,7 +32,7 @@ var (
 func orderHandler(w http.ResponseWriter, r *http.Request) {
 	order := Order{uuid.New().String(), 1, getRandomLocation()}
 
-	message := fmt.Sprintf("[v%d] Order %s to %s", order.Version, order.ID, order.Location)
+	message := fmt.Sprintf("[v%d] Order %s to %s\n", order.Version, order.ID, order.Location)
 
 	json, _ := json.Marshal(order)
 
