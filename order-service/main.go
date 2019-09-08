@@ -38,7 +38,7 @@ func orderHandler(w http.ResponseWriter, r *http.Request) {
 
 	client.RPush("queue:orders", json)
 
-	log.Println(message)
+	log.Print(message)
 
 	w.Write([]byte(message))
 }
