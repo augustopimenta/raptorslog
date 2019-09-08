@@ -37,7 +37,7 @@ func main() {
 
 	client, _ = mongo.Connect(context.TODO(), options.Client().ApplyURI(dbConnection))
 
-	fmt.Printf("shipping-service started! DELIVERY_TIME=%d\n", getDeliveryTime())
+	fmt.Printf("shipping-service:v2 started! DELIVERY_TIME=%d\n", getDeliveryTime())
 
 	r := mux.NewRouter()
 	r.HandleFunc("/deliver", deliverHandler)

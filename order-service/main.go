@@ -30,7 +30,7 @@ var (
 )
 
 func orderHandler(w http.ResponseWriter, r *http.Request) {
-	order := Order{uuid.New().String(), 1, getRandomLocation()}
+	order := Order{uuid.New().String(), 2, getRandomLocation()}
 
 	message := fmt.Sprintf("[v%d] Order %s to %s\n", order.Version, order.ID, order.Location)
 
@@ -50,7 +50,7 @@ func main() {
 		DB:       0,
 	})
 
-	fmt.Println("order-service started!")
+	fmt.Println("order-service:v2 started!")
 
 	r := mux.NewRouter()
 	r.HandleFunc("/order", orderHandler)

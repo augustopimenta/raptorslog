@@ -37,22 +37,33 @@ func main() {
 
 	fillRoutes()
 
-	fmt.Println("shipping-service started!")
+	fmt.Println("shipping-service:v2 started!")
+
+	ctrl := make(chan int, 100)
 
 	for {
+		ctrl <- 1
+
 		var order Order
 		result, _ := client.BLPop(0, "queue:orders").Result()
 
 		json.Unmarshal([]byte(result[1]), &order)
 
 		if host, ok := deliveryRoutes[order.Location]; ok && host != "" {
-			fmt.Printf("Processing: %s, sending to host %s\n", result[1], host)
-
-			http.Post(fmt.Sprintf("http://%s/deliver", host), "application/json", bytes.NewBuffer([]byte(result[1])))
+			go func() {
+				processOrder(host, result[1])
+				<-ctrl
+			}()
 		} else {
-			fmt.Printf("Processing %s, with error\n", result[1])
+			fmt.Printf("[v2] Processing %s, with error\n", result[1])
 		}
 	}
+}
+
+func processOrder(host, data string) {
+	fmt.Printf("[v2] Processing: %s, sending to host %s\n", data, host)
+
+	http.Post(fmt.Sprintf("http://%s/deliver", host), "application/json", bytes.NewBuffer([]byte(data)))
 }
 
 func fillRoutes() {
