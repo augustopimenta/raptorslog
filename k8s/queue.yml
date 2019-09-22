@@ -4,6 +4,7 @@ metadata:
   name: queue
   labels:
     app: queue
+    service: queue
 spec:
   selector:
     app: queue

@@ -2,6 +2,9 @@ apiVersion: v1
 kind: Service
 metadata:
   name: truck-am
+  labels:
+    app: truck-am
+    service: truck-am
 spec:
   selector:
     app: truck-am
@@ -14,6 +17,9 @@ apiVersion: v1
 kind: Service
 metadata:
   name: truck-mg
+  labels:
+    app: truck-mg
+    service: truck-mg
 spec:
   selector:
     app: truck-mg
@@ -26,6 +32,9 @@ apiVersion: v1
 kind: Service
 metadata:
   name: truck-rs
+  labels:
+    app: truck-mg
+    service: truck-mg
 spec:
   selector:
     app: truck-rs
@@ -33,6 +42,21 @@ spec:
   ports:
     - port: 80
       name: web
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: raptorslog-truck-am
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: raptorslog-truck-mg
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: raptorslog-truck-rs
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -49,11 +73,12 @@ spec:
     metadata:
       labels:
         app: truck-am
+        version: v1
     spec:
+      serviceAccountName: raptorslog-truck-am
       containers:
         - name: truck-am-service
-          image: augustopimenta/raptorslog-truck-service:v1.0
-          imagePullPolicy: Always
+          image: docker.io/augustopimenta/raptorslog-truck-service:v1.0
           ports:
             - containerPort: 80
               name: web
@@ -93,11 +118,12 @@ spec:
     metadata:
       labels:
         app: truck-mg
+        version: v1
     spec:
+      serviceAccountName: raptorslog-truck-mg
       containers:
         - name: truck-mg-service
-          image: augustopimenta/raptorslog-truck-service:v1.0
-          imagePullPolicy: Always
+          image: docker.io/augustopimenta/raptorslog-truck-service:v1.0
           ports:
             - containerPort: 80
               name: web
@@ -137,11 +163,12 @@ spec:
     metadata:
       labels:
         app: truck-rs
+        version: v1
     spec:
+      serviceAccountName: raptorslog-truck-rs
       containers:
         - name: truck-rs-service
-          image: augustopimenta/raptorslog-truck-service:v1.0
-          imagePullPolicy: Always
+          image: docker.io/augustopimenta/raptorslog-truck-service:v1.0
           ports:
             - containerPort: 80
               name: web

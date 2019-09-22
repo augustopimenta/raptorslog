@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"io/ioutil"
 	"math"
 	"net/http"
 	"os"
@@ -100,5 +101,9 @@ func order(url string, count chan int) {
 		return
 	}
 
-	resp.Body.Close()
+	defer resp.Body.Close()
+
+	data, _ := ioutil.ReadAll(resp.Body)
+
+	fmt.Print(string(data))
 }

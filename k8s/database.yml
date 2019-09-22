@@ -4,6 +4,7 @@ metadata:
   name: database
   labels:
     app: database
+    service: database
 spec:
   ports:
     - port: 27017
